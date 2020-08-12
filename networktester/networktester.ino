@@ -1,11 +1,11 @@
 #include <M5Stack.h>				//  https://github.com/m5stack/M5Stack
 #include <M5_UI.h>					//  https://github.com/dsiberia9s/M5_UI
-#include <LoRaWan.h>
+#include "BLoRaWan.h"
 #include "soc/timer_group_struct.h"
 #include "soc/timer_group_reg.h"
 
-#define M5go
-#define M5gps
+//#define M5go
+//#define M5gps
 
 #ifdef M5go
 #include <NeoPixelBrightnessBus.h>  //  https://github.com/Makuna/NeoPixelBus
@@ -287,74 +287,74 @@ void writegpx() {
 //Settings for LoRaWAN
 void initlora() {
 
-  lora.init();
+  blora.init();
 
   if (powersave == false) {
     delay(1000);
 
     memset(buffer, 0, 256);
-    lora.getVersion(buffer, 256, 1);
+    blora.getVersion(buffer, 256, 1);
     Serial.print(buffer);
 
     memset(buffer, 0, 256);
-    lora.getId(buffer, 256, 1);
+    blora.getId(buffer, 256, 1);
     Serial.print(buffer);
 
     // void setId(char *DevAddr, char *DevEUI, char *AppEUI);
-    lora.setId("yourdeviceaddress", NULL, NULL);            //for ABP
-    //lora.setId("ABP-yourdeviceaddress", "OTAA-yourdeviceEUI", "OTAA-yourAppEUI"); //for OTAA
+    blora.setId("yourdeviceaddress", NULL, NULL);            //for ABP
+    //blora.setId("ABP-yourdeviceaddress", "OTAA-yourdeviceEUI", "OTAA-yourAppEUI"); //for OTAA
 
     // setKey(char *NwkSKey, char *AppSKey, char *AppKey);
-    lora.setKey("yourNetworkSKey", "yourappSKey", NULL);          //for ABP
-    //lora.setKey("ABP-yourNetworkSKey", "ABP-yourappSKey", "OTAAyourAppKey);   //for OTAA
+    blora.setKey("yourNetworkSKey", "yourappSKey", NULL);          //for ABP
+    //blora.setKey("ABP-yourNetworkSKey", "ABP-yourappSKey", "OTAAyourAppKey);   //for OTAA
 
-    lora.setDeviceMode(LWABP);
-    lora.setDataRate(DR5, EU868);
+    blora.setDeviceMode(LWABP);
+    blora.setDataRate(DR5, EU868);
 
-    lora.setChannel(0, 868.1);
-    lora.setChannel(1, 868.3);
-    lora.setChannel(2, 868.5);
-    lora.setChannel(3, 867.1);
-    lora.setChannel(4, 867.3);
-    lora.setChannel(5, 867.5);
-    lora.setChannel(6, 867.7);
-    lora.setChannel(7, 867.9);
+    blora.setChannel(0, 868.1);
+    blora.setChannel(1, 868.3);
+    blora.setChannel(2, 868.5);
+    blora.setChannel(3, 867.1);
+    blora.setChannel(4, 867.3);
+    blora.setChannel(5, 867.5);
+    blora.setChannel(6, 867.7);
+    blora.setChannel(7, 867.9);
 
-    lora.setReceiveWindowFirst(0, 868.1);
-    lora.setReceiveWindowSecond(869.525, DR3);
+    blora.setReceiveWindowFirst(0, 868.1);
+    blora.setReceiveWindowSecond(869.525, DR3);
 
-    lora.setPower(14);
-    lora.setPort(1);
-    lora.setAdaptiveDataRate(false);
-    lora.setDutyCycle(true);
-    lora.setDeviceLowPower();
+    blora.setPower(14);
+    blora.setPort(1);
+    blora.setAdaptiveDataRate(false);
+    blora.setDutyCycle(true);
+    blora.setDeviceLowPower();
   }
 }
 
 //Settings for LoRaWAN ABP
 void initloraabp() {
-  lora.sendDevicePing();
-  lora.setDeviceMode(LWABP);
-  lora.setAdaptiveDataRate(false);
-  lora.setDutyCycle(true);
+  blora.sendDevicePing();
+  blora.setDeviceMode(LWABP);
+  blora.setAdaptiveDataRate(false);
+  blora.setDutyCycle(true);
   otaa = 0;
   cnt = -1;
-  lora.setDeviceLowPower();
+  blora.setDeviceLowPower();
 }
 
 //Settings for LoRaWAN OTAA
 void initloraotaa() {
-  lora.sendDevicePing();
-  lora.setDeviceMode(LWOTAA);
-  lora.setAdaptiveDataRate(true);
-  lora.setDutyCycle(false);
+  blora.sendDevicePing();
+  blora.setDeviceMode(LWOTAA);
+  blora.setAdaptiveDataRate(true);
+  blora.setDutyCycle(false);
   UISet(&UIInputbox_awnh87, "Joining");
-  while (!lora.setOTAAJoin(JOIN, 10));
+  while (!blora.setOTAAJoin(JOIN, 10));
   UISet(&UIInputbox_awnh87, "Joined");
-  lora.setDutyCycle(true);
+  blora.setDutyCycle(true);
   otaa = 1;
   cnt = -1;
-  lora.setDeviceLowPower();
+  blora.setDeviceLowPower();
 }
 
 //Send data using LoRaWAN
@@ -388,59 +388,59 @@ void sendobject() {
 #endif
 
     UISet(&UIInputbox_awnh87, "Sending");
-    lora.sendDevicePing();
+    blora.sendDevicePing();
 
     if (oldisf != isf) {
       if (isf == 0) {
-        lora.setDataRate(DR5, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR5, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       } else if (isf == 1) {
-        lora.setDataRate(DR4, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR4, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       } else if (isf == 2) {
-        lora.setDataRate(DR3, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR3, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       } else if (isf == 3) {
-        lora.setDataRate(DR2, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR2, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       } else if (isf == 4) {
-        lora.setDataRate(DR1, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR1, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       } else if (isf == 5) {
-        lora.setDataRate(DR0, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR0, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       }
     }
 
 #ifdef M5gps
-    result = lora.transferPacket(coords, sizeof(coords), 5);
+    result = blora.transferPacket(coords, sizeof(coords), 5);
 #else
-    result = lora.transferPacket(ncoords, sizeof(ncoords), 5);
+    result = blora.transferPacket(ncoords, sizeof(ncoords), 5);
 #endif
 
     if (result == true) {
       cnt++;
       txcnt = String("Sent " + String(cnt));
       UISet(&UIInputbox_awnh87, txcnt);
-    } else if (lora.dutycycle == true) {
+    } else if (blora.dutycycle == true) {
       UISet(&UIInputbox_awnh87, "DutyCycle");
     } else {
       UISet(&UIInputbox_awnh87, "Error");
@@ -452,38 +452,38 @@ void sendobject() {
 #endif
 
     UISet(&UIInputbox_awnh87, "ACK");
-    lora.sendDevicePing();
+    blora.sendDevicePing();
 
     if (isf == 0) {
-      lora.setDataRate(DR5, EU868);
+      blora.setDataRate(DR5, EU868);
       oldisf = 6;
       cnt = -1;
     } else if (isf == 1) {
-      lora.setDataRate(DR4, EU868);
+      blora.setDataRate(DR4, EU868);
       oldisf = 6;
       cnt = -1;
     } else if (isf == 2) {
-      lora.setDataRate(DR3, EU868);
+      blora.setDataRate(DR3, EU868);
       oldisf = 6;
       cnt = -1;
     } else if (isf == 3) {
-      lora.setDataRate(DR2, EU868);
+      blora.setDataRate(DR2, EU868);
       oldisf = 6;
       cnt = -1;
     } else if (isf == 4) {
-      lora.setDataRate(DR1, EU868);
+      blora.setDataRate(DR1, EU868);
       oldisf = 6;
       cnt = -1;
     } else if (isf == 5) {
-      lora.setDataRate(DR0, EU868);
+      blora.setDataRate(DR0, EU868);
       oldisf = 6;
       cnt = -1;
     }
 
 #ifdef M5gps
-    result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 5);
+    result = blora.transferPacketWithConfirmed(coords, sizeof(coords), 5);
 #else
-    result = lora.transferPacketWithConfirmed(ncoords, sizeof(ncoords), 5);
+    result = blora.transferPacketWithConfirmed(ncoords, sizeof(ncoords), 5);
 #endif
 
 
@@ -499,7 +499,7 @@ void sendobject() {
       short gwcnt;
 
       memset(buffer, 0, 256);
-      length = lora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
+      length = blora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
 
       dtostrf(snr, 5, 1, charsnr);
 
@@ -529,49 +529,49 @@ void sendobject() {
   } else if (iwm == 3) {
 
     UISet(&UIInputbox_awnh87, "LCR");
-    lora.sendDevicePing();
+    blora.sendDevicePing();
 
     if (oldisf != isf) {
       if (isf == 0) {
-        lora.setDataRate(DR5, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR5, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       } else if (isf == 1) {
-        lora.setDataRate(DR4, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR4, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       } else if (isf == 2) {
-        lora.setDataRate(DR3, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR3, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       } else if (isf == 3) {
-        lora.setDataRate(DR2, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR2, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       } else if (isf == 4) {
-        lora.setDataRate(DR1, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR1, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       } else if (isf == 5) {
-        lora.setDataRate(DR0, EU868);
-        lora.setAdaptiveDataRate(false);
-        lora.setDutyCycle(true);
+        blora.setDataRate(DR0, EU868);
+        blora.setAdaptiveDataRate(false);
+        blora.setDutyCycle(true);
         oldisf = isf;
         cnt = -1;
       }
     }
 
-    result = lora.transferPacketLinkCheckReq(5);
+    result = blora.transferPacketLinkCheckReq(5);
 
     if (result == true) {
       cnt++;
@@ -585,7 +585,7 @@ void sendobject() {
       short gwcnt;
 
       memset(buffer, 0, 256);
-      length = lora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
+      length = blora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
 
       dtostrf(snr, 5, 1, charsnr);
 
@@ -610,13 +610,13 @@ void sendobject() {
       }
 #endif
 
-    } else if (lora.dutycycle == true) {
+    } else if (blora.dutycycle == true) {
       UISet(&UIInputbox_awnh87, "DutyCycle");
     } else {
       UISet(&UIInputbox_awnh87, "Error");
     }
   }
-  lora.setDeviceLowPower();
+  blora.setDeviceLowPower();
 }
 
 void sendobjectotaa() {
@@ -643,21 +643,21 @@ void sendobjectotaa() {
 
   sentMillis = millis();
 
-  lora.sendDevicePing();
+  blora.sendDevicePing();
 
   UISet(&UIInputbox_awnh87, "Sending");
 
 #ifdef M5gps
   if (otaaack == 0) {
-    result = lora.transferPacket(coords, sizeof(coords), 5);
+    result = blora.transferPacket(coords, sizeof(coords), 5);
   } else if (otaaack == 1) {
-    result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 5);
+    result = blora.transferPacketWithConfirmed(coords, sizeof(coords), 5);
   }
 #else
   if (otaaack == 0) {
-    result = lora.transferPacket(ncoords, sizeof(ncoords), 5);
+    result = blora.transferPacket(ncoords, sizeof(ncoords), 5);
   } else if (otaaack == 1) {
-    result = lora.transferPacketWithConfirmed(ncoords, sizeof(ncoords), 5);
+    result = blora.transferPacketWithConfirmed(ncoords, sizeof(ncoords), 5);
   }
 #endif
 
@@ -673,7 +673,7 @@ void sendobjectotaa() {
     short gwcnt;
 
     memset(buffer, 0, 256);
-    length = lora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
+    length = blora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
 
     dtostrf(snr, 5, 1, charsnr);
     if (rssi >= -200) {
@@ -698,12 +698,12 @@ void sendobjectotaa() {
 #endif
 
     }
-  } else if (lora.dutycycle == true) {
+  } else if (blora.dutycycle == true) {
     UISet(&UIInputbox_awnh87, "DutyCycle");
   } else {
     UISet(&UIInputbox_awnh87, "Error");
   }
-  lora.setDeviceLowPower();
+  blora.setDeviceLowPower();
 }
 
 #ifdef M5gps
@@ -712,79 +712,79 @@ void ssv() {
 
   UISet(&UIInputbox_awnh87, "SSV running");
   ssvinit();
-  lora.sendDevicePing();
-  lora.setDutyCycle(false);
+  blora.sendDevicePing();
+  blora.setDutyCycle(false);
 
   bool result = false;
   ssvresult = "DR ";
 
-  lora.setDataRate(DR5, EU868);
+  blora.setDataRate(DR5, EU868);
   isf = 0;
-  result = lora.transferPacketLinkCheckReq(5);
+  result = blora.transferPacketLinkCheckReq(5);
 
   if (result == true) {
     memset(buffer, 0, 256);
-    length = lora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
+    length = blora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
     writessv();
     bool result = false;
     ssvresult += "5";
   }
 
-  lora.setDataRate(DR4, EU868);
+  blora.setDataRate(DR4, EU868);
   isf = 1;
-  result = lora.transferPacketLinkCheckReq(5);
+  result = blora.transferPacketLinkCheckReq(5);
 
   if (result == true) {
     memset(buffer, 0, 256);
-    length = lora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
+    length = blora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
     writessv();
     bool result = false;
     ssvresult += "4";
   }
 
-  lora.setDataRate(DR3, EU868);
+  blora.setDataRate(DR3, EU868);
   isf = 2;
-  result = lora.transferPacketLinkCheckReq(5);
+  result = blora.transferPacketLinkCheckReq(5);
 
   if (result == true) {
     memset(buffer, 0, 256);
-    length = lora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
+    length = blora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
     writessv();
     bool result = false;
     ssvresult += "3";
   }
 
-  lora.setDataRate(DR2, EU868);
+  blora.setDataRate(DR2, EU868);
   isf = 3;
-  result = lora.transferPacketLinkCheckReq(5);
+  result = blora.transferPacketLinkCheckReq(5);
 
   if (result == true) {
     memset(buffer, 0, 256);
-    length = lora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
+    length = blora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
     writessv();
     bool result = false;
     ssvresult += "2";
   }
 
-  lora.setDataRate(DR1, EU868);
+  blora.setDataRate(DR1, EU868);
   isf = 4;
-  result = lora.transferPacketLinkCheckReq(5);
+  result = blora.transferPacketLinkCheckReq(5);
 
   if (result == true) {
     memset(buffer, 0, 256);
-    length = lora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
+    length = blora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
     writessv();
     bool result = false;
     ssvresult += "1";
   }
 
-  lora.setDataRate(DR0, EU868);
+  blora.setDataRate(DR0, EU868);
   isf = 5;
-  result = lora.transferPacketLinkCheckReq(5);
+  result = blora.transferPacketLinkCheckReq(5);
 
   if (result == true) {
     memset(buffer, 0, 256);
-    length = lora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
+    length = blora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
     writessv();
     bool result = false;
     ssvresult += "0";
@@ -797,9 +797,9 @@ void ssv() {
 
   UISet(&UIInputbox_awnh87, ssvresult);
 
-  lora.setDutyCycle(true);
-  lora.setDataRate(DR5, EU868);
-  lora.setDeviceLowPower();
+  blora.setDutyCycle(true);
+  blora.setDataRate(DR5, EU868);
+  blora.setDeviceLowPower();
   isf = 0;
   cnt = -1;
 }

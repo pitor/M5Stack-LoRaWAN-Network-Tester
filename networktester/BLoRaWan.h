@@ -96,13 +96,13 @@ US915   0           SF10/125 kHz    980    | 0       30dBm
 *******************************************************************/
 
 
-class LoRaWanClass
+class BLoRaWanClass
 {
     public:
   
         bool dutycycle = false;
     
-        LoRaWanClass(void);
+        BLoRaWanClass(void);
         
         /**
          *  \brief Initialize the conmunication interface
@@ -503,7 +503,7 @@ class LoRaWanClass
 };
 
 
-extern LoRaWanClass lora;
+extern BLoRaWanClass blora;
 
 
 #endif

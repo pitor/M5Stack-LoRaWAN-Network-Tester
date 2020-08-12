@@ -28,7 +28,7 @@
   THE SOFTWARE.1  USA
 */
 
-#include "LoRaWan.h"
+#include "BLoRaWan.h"
 
 static void smartDelay(unsigned long ms) {
    unsigned long start = millis();
@@ -37,18 +37,18 @@ static void smartDelay(unsigned long ms) {
 }
 
 
-LoRaWanClass::LoRaWanClass(void)
+BLoRaWanClass::BLoRaWanClass(void)
 {
     memset(_buffer, 0, 256);
 }
 
-void LoRaWanClass::init(void)
+void BLoRaWanClass::init(void)
 {
     SerialLoRa.begin(9600, SERIAL_8N1, 2, 5);
     //SerialLoRa.begin(9600, SERIAL_8N1, 16, 17);
 }
 
-void LoRaWanClass::getVersion(char *buffer, short length, unsigned char timeout)
+void BLoRaWanClass::getVersion(char *buffer, short length, unsigned char timeout)
 {
     if(buffer)
     {
@@ -58,7 +58,7 @@ void LoRaWanClass::getVersion(char *buffer, short length, unsigned char timeout)
     }
 }
 
-void LoRaWanClass::getId(char *buffer, short length, unsigned char timeout)
+void BLoRaWanClass::getId(char *buffer, short length, unsigned char timeout)
 {
     if(buffer)
     {
@@ -68,7 +68,7 @@ void LoRaWanClass::getId(char *buffer, short length, unsigned char timeout)
     }
 }
 
-void LoRaWanClass::setId(char *DevAddr, char *DevEUI, char *AppEUI)
+void BLoRaWanClass::setId(char *DevAddr, char *DevEUI, char *AppEUI)
 {
     char cmd[64];
     
@@ -97,7 +97,7 @@ void LoRaWanClass::setId(char *DevAddr, char *DevEUI, char *AppEUI)
     }
 }
 
-void LoRaWanClass::setKey(char *NwkSKey, char *AppSKey, char *AppKey)
+void BLoRaWanClass::setKey(char *NwkSKey, char *AppSKey, char *AppKey)
 {
     char cmd[64];
     
@@ -135,7 +135,7 @@ void LoRaWanClass::setKey(char *NwkSKey, char *AppSKey, char *AppKey)
     }
 }
 
-void LoRaWanClass::setDataRate(_data_rate_t dataRate, _physical_type_t physicalType)
+void BLoRaWanClass::setDataRate(_data_rate_t dataRate, _physical_type_t physicalType)
 {
     char cmd[32];
     
@@ -165,7 +165,7 @@ void LoRaWanClass::setDataRate(_data_rate_t dataRate, _physical_type_t physicalT
     smartDelay(DEFAULT_TIMEWAIT);
 }
  
-void LoRaWanClass::setPower(short power)
+void BLoRaWanClass::setPower(short power)
 {
     char cmd[32];
     
@@ -178,7 +178,7 @@ void LoRaWanClass::setPower(short power)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setPort(int port)
+void BLoRaWanClass::setPort(int port)
 {
     char cmd[32];
     
@@ -191,7 +191,7 @@ void LoRaWanClass::setPort(int port)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setAdaptiveDataRate(bool command)
+void BLoRaWanClass::setAdaptiveDataRate(bool command)
 {
     if(command)sendCommand("AT+ADR=ON\r\n");
     else sendCommand("AT+ADR=OFF\r\n");
@@ -201,7 +201,7 @@ void LoRaWanClass::setAdaptiveDataRate(bool command)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setChannel(unsigned char channel, float frequency)
+void BLoRaWanClass::setChannel(unsigned char channel, float frequency)
 {
     char cmd[32];
     
@@ -214,7 +214,7 @@ void LoRaWanClass::setChannel(unsigned char channel, float frequency)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setChannel(unsigned char channel, float frequency, _data_rate_t dataRata)
+void BLoRaWanClass::setChannel(unsigned char channel, float frequency, _data_rate_t dataRata)
 {
     char cmd[32];
     
@@ -227,7 +227,7 @@ void LoRaWanClass::setChannel(unsigned char channel, float frequency, _data_rate
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setChannel(unsigned char channel, float frequency, _data_rate_t dataRataMin, _data_rate_t dataRataMax)
+void BLoRaWanClass::setChannel(unsigned char channel, float frequency, _data_rate_t dataRataMin, _data_rate_t dataRataMax)
 {
     char cmd[32];
     
@@ -240,7 +240,7 @@ void LoRaWanClass::setChannel(unsigned char channel, float frequency, _data_rate
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-bool LoRaWanClass::transferPacket(char *buffer, unsigned char timeout)
+bool BLoRaWanClass::transferPacket(char *buffer, unsigned char timeout)
 {
     unsigned char length = strlen(buffer);
     
@@ -259,7 +259,7 @@ bool LoRaWanClass::transferPacket(char *buffer, unsigned char timeout)
     return false;
 }
 
-bool LoRaWanClass::transferPacket(unsigned char *buffer, int length, unsigned char timeout)
+bool BLoRaWanClass::transferPacket(unsigned char *buffer, int length, unsigned char timeout)
 {
     char temp[3] = {0};   //char temp[3] = {0}; In C strings are 0-terminated, meaning that after the call to sprintf, _int_char contains { 'a', 'b', '\0' }. This is an array of 3 chars and you only reserver memory for 2
     while(SerialLoRa.available())SerialLoRa.read();
@@ -283,7 +283,7 @@ bool LoRaWanClass::transferPacket(unsigned char *buffer, int length, unsigned ch
     return false;
 }
 
-bool LoRaWanClass::transferPacketWithConfirmed(char *buffer, unsigned char timeout)
+bool BLoRaWanClass::transferPacketWithConfirmed(char *buffer, unsigned char timeout)
 {
     unsigned char length = strlen(buffer);
     
@@ -302,7 +302,7 @@ bool LoRaWanClass::transferPacketWithConfirmed(char *buffer, unsigned char timeo
     return false;
 }
 
-bool LoRaWanClass::transferPacketWithConfirmed(unsigned char *buffer, int length, unsigned char timeout)
+bool BLoRaWanClass::transferPacketWithConfirmed(unsigned char *buffer, int length, unsigned char timeout)
 {
     char temp[3] = {0};
     
@@ -325,7 +325,7 @@ bool LoRaWanClass::transferPacketWithConfirmed(unsigned char *buffer, int length
     return false;
 }
 
-bool LoRaWanClass::transferPacketLinkCheckReq(unsigned char timeout)
+bool BLoRaWanClass::transferPacketLinkCheckReq(unsigned char timeout)
 {
 
     while(SerialLoRa.available())SerialLoRa.read();
@@ -345,7 +345,7 @@ bool LoRaWanClass::transferPacketLinkCheckReq(unsigned char timeout)
     return false;
 }
 
-short LoRaWanClass::receivePacket(char *buffer, int length, short *rssi, float *snr, short *gwcnt)
+short BLoRaWanClass::receivePacket(char *buffer, int length, short *rssi, float *snr, short *gwcnt)
 {
     char *ptr;
     short number = 0;
@@ -407,7 +407,7 @@ short LoRaWanClass::receivePacket(char *buffer, int length, short *rssi, float *
     return number;
 }
 
-bool LoRaWanClass::transferProprietaryPacket(char *buffer, unsigned char timeout)
+bool BLoRaWanClass::transferProprietaryPacket(char *buffer, unsigned char timeout)
 {
     unsigned char length = strlen(buffer);
     
@@ -426,7 +426,7 @@ bool LoRaWanClass::transferProprietaryPacket(char *buffer, unsigned char timeout
     return false;
 }
 
-bool LoRaWanClass::transferProprietaryPacket(unsigned char *buffer, unsigned char length, unsigned char timeout)
+bool BLoRaWanClass::transferProprietaryPacket(unsigned char *buffer, unsigned char length, unsigned char timeout)
 {
     char temp[3] = {0};
     
@@ -450,7 +450,7 @@ bool LoRaWanClass::transferProprietaryPacket(unsigned char *buffer, unsigned cha
 }
 
         
-void LoRaWanClass::setUnconfirmedMessageRepeatTime(unsigned char time)
+void BLoRaWanClass::setUnconfirmedMessageRepeatTime(unsigned char time)
 {
     char cmd[32];
     
@@ -466,7 +466,7 @@ void LoRaWanClass::setUnconfirmedMessageRepeatTime(unsigned char time)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setConfirmedMessageRetryTime(unsigned char time)
+void BLoRaWanClass::setConfirmedMessageRetryTime(unsigned char time)
 {
     char cmd[32];
     
@@ -482,7 +482,7 @@ void LoRaWanClass::setConfirmedMessageRetryTime(unsigned char time)
     smartDelay(DEFAULT_TIMEWAIT);    
 }
 
-void LoRaWanClass::setReceiveWindowFirst(bool command)
+void BLoRaWanClass::setReceiveWindowFirst(bool command)
 {
     if(command)sendCommand("AT+RXWIN1=ON\r\n");
     else sendCommand("AT+RXWIN1=OFF\r\n");
@@ -492,7 +492,7 @@ void LoRaWanClass::setReceiveWindowFirst(bool command)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setReceiveWindowFirst(unsigned char channel, float frequency)
+void BLoRaWanClass::setReceiveWindowFirst(unsigned char channel, float frequency)
 {
     char cmd[32];
     
@@ -505,7 +505,7 @@ void LoRaWanClass::setReceiveWindowFirst(unsigned char channel, float frequency)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setReceiveWindowSecond(float frequency, _data_rate_t dataRate)
+void BLoRaWanClass::setReceiveWindowSecond(float frequency, _data_rate_t dataRate)
 {
     char cmd[32];
     
@@ -518,7 +518,7 @@ void LoRaWanClass::setReceiveWindowSecond(float frequency, _data_rate_t dataRate
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setReceiveWindowSecond(float frequency, _spreading_factor_t spreadingFactor, _band_width_t bandwidth)
+void BLoRaWanClass::setReceiveWindowSecond(float frequency, _spreading_factor_t spreadingFactor, _band_width_t bandwidth)
 {
     char cmd[32];
     
@@ -531,7 +531,7 @@ void LoRaWanClass::setReceiveWindowSecond(float frequency, _spreading_factor_t s
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setDutyCycle(bool command)
+void BLoRaWanClass::setDutyCycle(bool command)
 {
     if(command)sendCommand("AT+LW=DC, ON\r\n");
     else sendCommand("AT+LW=DC, OFF\r\n");  
@@ -541,7 +541,7 @@ void LoRaWanClass::setDutyCycle(bool command)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setJoinDutyCycle(bool command)
+void BLoRaWanClass::setJoinDutyCycle(bool command)
 {
     if(command)sendCommand("AT+LW=JDC,ON\r\n");
     else sendCommand("AT+LW=JDC,OFF\r\n");  
@@ -551,7 +551,7 @@ void LoRaWanClass::setJoinDutyCycle(bool command)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setReceiveWindowDelay(_window_delay_t command, unsigned short _delay)
+void BLoRaWanClass::setReceiveWindowDelay(_window_delay_t command, unsigned short _delay)
 {
     char cmd[32];
     
@@ -567,7 +567,7 @@ void LoRaWanClass::setReceiveWindowDelay(_window_delay_t command, unsigned short
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setClassType(_class_type_t type)
+void BLoRaWanClass::setClassType(_class_type_t type)
 {
     if(type == CLASS_A)sendCommand("AT+CLASS=A\r\n");
     else if(type == CLASS_C)sendCommand("AT+CLASS=C\r\n");
@@ -577,7 +577,7 @@ void LoRaWanClass::setClassType(_class_type_t type)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setDeviceMode(_device_mode_t mode)
+void BLoRaWanClass::setDeviceMode(_device_mode_t mode)
 {
     if(mode == LWABP)sendCommand("AT+MODE=LWABP\r\n");
     else if(mode == LWOTAA)sendCommand("AT+MODE=LWOTAA\r\n");
@@ -587,7 +587,7 @@ void LoRaWanClass::setDeviceMode(_device_mode_t mode)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-bool LoRaWanClass::setOTAAJoin(_otaa_join_cmd_t command, unsigned char timeout)
+bool BLoRaWanClass::setOTAAJoin(_otaa_join_cmd_t command, unsigned char timeout)
 {
     char *ptr;
     
@@ -613,7 +613,7 @@ bool LoRaWanClass::setOTAAJoin(_otaa_join_cmd_t command, unsigned char timeout)
     return true;
 }
 
-void LoRaWanClass::setDeviceLowPower(void)
+void BLoRaWanClass::setDeviceLowPower(void)
 {
     sendCommand("AT+LOWPOWER\r\n");
 #if _DEBUG_SERIAL_
@@ -622,7 +622,7 @@ void LoRaWanClass::setDeviceLowPower(void)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::sendDevicePing(void)
+void BLoRaWanClass::sendDevicePing(void)
 {
     sendCommand("AT\r\n");
 #if _DEBUG_SERIAL_
@@ -631,7 +631,7 @@ void LoRaWanClass::sendDevicePing(void)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setDeviceReset(void)
+void BLoRaWanClass::setDeviceReset(void)
 {
     sendCommand("AT+RESET\r\n");
 #if _DEBUG_SERIAL_
@@ -640,7 +640,7 @@ void LoRaWanClass::setDeviceReset(void)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setDeviceDefault(void)
+void BLoRaWanClass::setDeviceDefault(void)
 {
     sendCommand("AT+FDEFAULT=RISINGHF\r\n");
 #if _DEBUG_SERIAL_
@@ -649,7 +649,7 @@ void LoRaWanClass::setDeviceDefault(void)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::initP2PMode(unsigned short frequency, _spreading_factor_t spreadingFactor, _band_width_t bandwidth, 
+void BLoRaWanClass::initP2PMode(unsigned short frequency, _spreading_factor_t spreadingFactor, _band_width_t bandwidth, 
                                 unsigned char txPreamble, unsigned char rxPreamble, short power)
 {
     char cmd[64] = {0,};
@@ -663,7 +663,7 @@ void LoRaWanClass::initP2PMode(unsigned short frequency, _spreading_factor_t spr
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
-bool LoRaWanClass::transferPacketP2PMode(char *buffer, unsigned char timeout)
+bool BLoRaWanClass::transferPacketP2PMode(char *buffer, unsigned char timeout)
 {
     unsigned char length = strlen(buffer);
     
@@ -680,7 +680,7 @@ bool LoRaWanClass::transferPacketP2PMode(char *buffer, unsigned char timeout)
     return waitForResponse("+TEST: TX DONE", timeout);
 }
 
-bool LoRaWanClass::transferPacketP2PMode(unsigned char *buffer, unsigned char length, unsigned char timeout)
+bool BLoRaWanClass::transferPacketP2PMode(unsigned char *buffer, unsigned char length, unsigned char timeout)
 {
     char temp[3] = {0};
     
@@ -701,7 +701,7 @@ bool LoRaWanClass::transferPacketP2PMode(unsigned char *buffer, unsigned char le
     return waitForResponse("+TEST: TX DONE", timeout);
 }
 
-short LoRaWanClass::receivePacketP2PMode(unsigned char *buffer, int length, short *rssi, unsigned char timeout)
+short BLoRaWanClass::receivePacketP2PMode(unsigned char *buffer, int length, short *rssi, unsigned char timeout)
 {
     char *ptr;
     short number;
@@ -760,14 +760,14 @@ short LoRaWanClass::receivePacketP2PMode(unsigned char *buffer, int length, shor
     return number;
 }
 
-void LoRaWanClass::loraDebug(void)
+void BLoRaWanClass::loraDebug(void)
 {
     if(SerialUSB.available())SerialLoRa.write(SerialUSB.read());
     if(SerialLoRa.available())SerialUSB.write(SerialLoRa.read());
 }
 
 #if _DEBUG_SERIAL_
-void LoRaWanClass::loraDebugPrint(unsigned char timeout)
+void BLoRaWanClass::loraDebugPrint(unsigned char timeout)
 {
     unsigned long timerStart, timerEnd;
 
@@ -783,12 +783,12 @@ void LoRaWanClass::loraDebugPrint(unsigned char timeout)
 }
 #endif
 
-void LoRaWanClass::sendCommand(char *command)
+void BLoRaWanClass::sendCommand(char *command)
 {
     SerialLoRa.print(command);
 }
 
-short LoRaWanClass::readBuffer(char *buffer, int length, unsigned char timeout)
+short BLoRaWanClass::readBuffer(char *buffer, int length, unsigned char timeout)
 {
     short i = 0;
     unsigned long timerStart, timerEnd;
@@ -813,7 +813,7 @@ short LoRaWanClass::readBuffer(char *buffer, int length, unsigned char timeout)
     return i;
 }
 
-bool LoRaWanClass::waitForResponse(char* response, unsigned char timeout)
+bool BLoRaWanClass::waitForResponse(char* response, unsigned char timeout)
 {
     short len = strlen(response);
     short sum = 0;
@@ -838,7 +838,7 @@ bool LoRaWanClass::waitForResponse(char* response, unsigned char timeout)
     return true;
 }
 
-bool LoRaWanClass::sendCommandAndWaitForResponse(char* command, char *response, unsigned char timeout)
+bool BLoRaWanClass::sendCommandAndWaitForResponse(char* command, char *response, unsigned char timeout)
 {
     sendCommand(command);
     
@@ -846,4 +846,4 @@ bool LoRaWanClass::sendCommandAndWaitForResponse(char* command, char *response, 
 }
 
 
-LoRaWanClass lora;
+BLoRaWanClass blora;
