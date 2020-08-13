@@ -162,10 +162,12 @@ void initlora() {
     blora.setDutyCycle(true);
     blora.setDeviceLowPower();
   }
+  Serial.println("initlora done");
 }
 
 //Settings for LoRaWAN ABP
 void initloraabp() {
+  Serial.println("initloraabp");
   blora.sendDevicePing();
   blora.setDeviceMode(LWABP);
   blora.setAdaptiveDataRate(false);
@@ -177,6 +179,7 @@ void initloraabp() {
 
 //Settings for LoRaWAN OTAA
 void initloraotaa() {
+  Serial.println("initloraotaa");
   blora.sendDevicePing();
   blora.setDeviceMode(LWOTAA);
   blora.setAdaptiveDataRate(true);
