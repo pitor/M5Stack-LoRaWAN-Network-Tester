@@ -35,8 +35,8 @@
 #include <Arduino.h>
 
 #define SerialUSB   Serial
-#define SerialLoRa  Serial1     //used with GPS module and changed UART port for LoRaWAN module
-//#define SerialLoRa  Serial2   //used this if unchanged UART port for LoRaWAN module and without GPS module
+//#define SerialLoRa  Serial1     //used with GPS module and changed UART port for LoRaWAN module
+#define SerialLoRa  Serial2   //used this if unchanged UART port for LoRaWAN module and without GPS module
 
 #define _DEBUG_SERIAL_      1
 #define DEFAULT_TIMEOUT     5 // second

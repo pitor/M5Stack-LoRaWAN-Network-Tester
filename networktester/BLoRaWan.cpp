@@ -44,8 +44,8 @@ BLoRaWanClass::BLoRaWanClass(void)
 
 void BLoRaWanClass::init(void)
 {
-    SerialLoRa.begin(9600, SERIAL_8N1, 2, 5);
-    //SerialLoRa.begin(9600, SERIAL_8N1, 16, 17);
+    //SerialLoRa.begin(9600, SERIAL_8N1, 2, 5);
+    SerialLoRa.begin(9600, SERIAL_8N1, 16, 17);
 }
 
 void BLoRaWanClass::getVersion(char *buffer, short length, unsigned char timeout)
